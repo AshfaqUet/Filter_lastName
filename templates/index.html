@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="jumbotron text-center">
+    <h1>Task No 1</h1>
+  </div>
+<ul>
+    <li>You have to create a small Flask application which will consist of two routes(API), that will
+be used to upload file to application.</li>
+    <li>Write a Python script that will count the names in list having last name “siddique”.</li>
+    <li>Join the task goal 1 and 2, that is return the count when an API is used to upload a file.</li>
+    <li>Add database to application save the names that came in from file in users tables. (Bonus)</li>
+    <li>Implement"to-do list" app in Flask(python)
+        <ul>
+            <li>Hit the gym</li>
+            <li>Movie time</li>
+            <li>Office work</li>
+        </ul>
+    </li>
+</ul>
+{% if goal == 1 %}
+<hr>
+<h2>Goal No 1</h2>
+<p> Here you can upload file containing the names and we will filter the names having last name = "Siddique" </p>
+<em>Note:</em>
+<i>The file contain the name in this order because we only handle the preprocess for this type e.g file contain name like this</i>
+<ul>
+    <li>Name should be comma (,) seperated</li>
+    <li>All the name should be in one line</li>
+</ul>
+<code>Muhammad Ashfaq,Hussain Qureshi,Abu Bakr Siddique,</code>
+<form action="/uploads" method="post" enctype="multipart/form-data">
+    <input type='file' name='file' multiple=''>
+    <input type='submit' class="btn btn-primary" value='upload'>
+</form>
+{% endif %}
+<!--######################################## Goal No 2 ##################################################-->
+{% if goal == 2 or goal == 3 %}
+<br><br>
+<hr>
+<h2>Goal No 2</h2>
+<p>By Clicking on this button we will filter the names having last name =  'Siddique'</p>
+{% if goal == 2 %}
+<h2>Documentation / Discription:</h2>
+<b>Three steps are completed in this goal</b>
+<ul>
+    <li>Open the ./uploads/ directory and filter the name from all of the files by processing one by one     <code>(Route funciton filter() )</code> </li>
+    <li>Preprocess the each file exist in directory ./uploads/ <code>(preprocess_the_name_file(filename) )</code></li>
+    <li>Filter names from file(parameter filename) and return as a list and also return total no of filter names <code>(filter_names(filename,last_name) )</code></li>
+</ul>
+<h3>Functions Used in Coding</h3>
+<p>Two funciton is used in it</p>
+<ul>
+    <li>preprocess_the_name_file(filename)</li>
+    <li>filter_names(filename,last_name)</li>
+</ul>
+<h4>* preprocess_the_name_file(filename) Documentation: </h4>
+<pre>
+    It is a funciton which preprocess the file before filtering the person having last name = siddique
+    1. open a file and remove , character from the file because we consider a file where names are seperated by ,
+    2. CAPATALIZE all the character of the file file so that searching should be easy
+    :param filename: filename is required on which you want to apply the preprocess method
+    :return: None
+</pre>
+<h4>* filter_names(filename,last_name) Documentation: </h4>
+<pre>
+    This function filter out the person in file = filename having last name = last_name
+    :param filename: filename is required from which we filter out the person having last name
+    :param last_name: Last name on which you want to filter out the users
+    :return: return a list of filterd persons who have last name = parameteric lastname
+    :return: it also return the count of people having last name = parametric lastname
+</pre>
+{% endif %}
+<a class = "btn btn-primary" href="/filter/{{filename}}">Filter Names</a>
+<div class="container col-md-3">
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Filtered Name</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in filtered_names %}
+      <tr>
+        <td>{{ each }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% if goal == 2 or goal == 3  %}
+<br><br>
+<hr>
+<h2>Goal No 3</h2><br><br>
+<p>Total filtered names = {{ count }}</p>
+{% endif%}
+
+{% if goal == 3 or goal == 4%}
+<br><br>
+<hr>
+<h2>Goal No 4</h2>
+<p>Task No 4 is to enter the filtered names in the database. Enter this button to Enter the filtered names in database</p>
+<a class = "btn btn-primary" href="/store_name">Store Names</a>
+<br><br><h3>Names in Databases are </h3>
+<div class="container col-md-8">
+    <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>File Name</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in names %}
+    <tr>
+        <td>{{each.id}}</td>
+        <td>{{each.name}}</td>
+        <td>{{each.filename}}</td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<a class = "btn btn-primary" href="/">Back</a>
+
+{% endblock %}
