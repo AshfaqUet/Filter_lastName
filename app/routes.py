@@ -1,6 +1,5 @@
 from app import app
 import os
-from os import listdir
 from flask import render_template, request
 from app import functions, models
 
@@ -38,7 +37,8 @@ def filter(filename):
     filter_name, count = functions.filter_names(filename, last_name)
     return render_template('index.html', filtered_names=filter_name, filename=filename, count=count, goal=3)
 
-@app.route('/store', methods = ['GET','POST'])
+
+@app.route('/store', methods=['GET', 'POST'])
 def store():
     path = "./uploads"
     directories = os.listdir(path)
@@ -46,9 +46,9 @@ def store():
     for filename in directories:
         functions.preprocess_the_name_file(filename)
         last_name = ' SIDDIQUE'
-        filtered_names,count = functions.filter_names(filename,last_name)
+        filtered_names, count = functions.filter_names(filename, last_name)
         filter_name = filter_name + filtered_names
-        success = functions.enter_name_in_database(filtered_names,filename)
+        success = functions.enter_name_in_database(filtered_names, filename)
         if success:
             names = models.File.query.order_by(models.File.id)
-    return render_template('index.html',filtered_names = filter_name, names = names,goal = 4)
+    return render_template('index.html', filtered_names=filter_name, names=names, goal=4)
