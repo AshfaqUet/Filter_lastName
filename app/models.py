@@ -7,4 +7,11 @@ class File(db.Model):
     filename = db.Column(db.String(64), index=True)
 
     def __repr__(self):
-        return '<Filename {}>'.format(self.filename)
+        return '<name {}>'.format(self.name)
+
+    def toJson(self):
+        return {
+            "id":self.id,
+            "name":self.name,
+            "filename":self.filename
+        }
