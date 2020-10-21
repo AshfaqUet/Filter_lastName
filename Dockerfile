@@ -7,8 +7,5 @@ RUN pip install -r requirements.txt
 
 
 COPY . /filterlastname
-
 EXPOSE 5000
-
-RUN flask run
-
+RUN flask run --host=0.0.0.0
