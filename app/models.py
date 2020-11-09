@@ -9,7 +9,7 @@ class File(db.Model):
     def __repr__(self):
         return '<name {}>'.format(self.name)
 
-    def toJson(self):
+    def to_json(self):
         return {
             "id":self.id,
             "name":self.name,

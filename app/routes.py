@@ -1,30 +1,49 @@
 from app import app
 import os
-from flask import request, render_template, jsonify
+from flask import request, jsonify
 from app import functions, models
+from werkzeug.utils import secure_filename
+
+# ######################################### INDEX ###########################################################
 
 
 @app.route('/')
 def index():
-    return ("Hello its index route")
+    return "Hello its index route"
 
 
-@app.route('/uploads', methods=['POST'])     # route at which we uploads the file
-def uploads():                                      # upload folder to upload the file in the app
-    uploadfolder = './uploads/'                     # Uploading folder where we store the uploaded files
-    if request.method == 'POST':                    # if form submitted by post method
-        try:
-            os.mkdir(uploadfolder)
-        except:
-            pass
-        file = request.files['file']                # store the uploaded file in the file variable
-        if file:                                    # if file stored in file variable successfully
-            filename = file.filename                # storing filename from file in the variable
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'],
-                                   filename))       # here is the main point upload the file in the app
-            return "File Uploaded Successfully"
-        else:                                       # if file not uploaded successfully
-            return "File not uploaded successfully"
+# ########################################### UPLOADS ########################################################
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/uploads', methods=['POST'])
+def uploads():
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        resp = jsonify({'message': 'No file part in the request'})
+        resp.status_code = 400
+        return resp
+    file = request.files['file']
+    if file.filename == '':
+        resp = jsonify({'message': 'No file selected for uploading'})
+        resp.status_code = 400
+        return resp
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        resp = jsonify({'message': 'File successfully uploaded'})
+        resp.status_code = 201
+        return resp
+    else:
+        resp = jsonify({'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
+        resp.status_code = 400
+        return resp
+
+# ################################################ FILTER ##################################################
 
 
 @app.route('/filter/<string:filename>', methods=['GET'])
@@ -43,6 +62,8 @@ def filter(filename):
         return jsonify(result)
     else:
         return "File not exist in database"
+
+# ############################################## STORE #####################################################
 
 
 @app.route('/store', methods=['GET'])

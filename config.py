@@ -10,5 +10,10 @@ class Config(object):
                                                 # and if no env is defined then use second string
     UPLOAD_FOLDER = './uploads'
 
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'filter.db')
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}/{}'.format(
+    os.getenv('DB_USER', 'username'),
+    os.getenv('DB_PASSWORD', ''),
+    os.getenv('DB_HOST', 'mysql'),
+    os.getenv('DB_NAME', 'filter')
+)
     SQLALCHEMY_TRACK_MODIFICATIONS = False

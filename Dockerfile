@@ -1,14 +1,13 @@
 FROM python:3.6-alpine
 
 WORKDIR /filterlastname
+COPY . ./
 
-COPY requirements.txt /filterlastname
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
+RUN pip3 install flask
 
+ENV FLASK_APP 'filterlastname.py'
 
-COPY . /filterlastname
-
-EXPOSE 5000
-
-RUN flask run
+EXPOSE 5000:5000
+CMD ["flask","run","--host","0.0.0.0"]
 
